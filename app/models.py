@@ -41,3 +41,12 @@ class ShortURL(SQLModel):
 
     # Relationships
     owner: User = Relationship(back_populates="urls")
+
+
+# class Token(BaseModel):
+#     access_token: str
+#     token_type: str
+
+
+# class TokenData(BaseModel):
+#     username: str | None = None

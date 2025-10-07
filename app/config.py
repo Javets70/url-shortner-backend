@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./url_shortner.db"
 
     redis_url: str = "redis://localhost:6379"
+    default_cache_expiry_seconds = 60 * 60
 
     secret_key: str = "random secret key"
     algorithm: str = "HS256"
