@@ -55,6 +55,12 @@ class RedisService:
         except Exception as e:
             return False
 
+    def publish_message(self, channel: str, message: dict) -> bool:
+        try:
+            return self.client.publish(channel, json.dumps(message))
+        except Exception as e:
+            return False
+
     def get_rate_limit(self, key: str) -> int:
         try:
             count = self.client.get(key)

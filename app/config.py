@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     rate_limit_per_minute: int = 60
 
     base_url: str = "http://localhost:8000"
-    default_expiry_days: int = 30
+    url_default_expiry_days: int = 30
 
     visit_threshold: int = 100
     expiration_warning_days: int = 7
