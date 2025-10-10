@@ -35,7 +35,7 @@ def authenticate_user(session: Session, username: str, password: str):
     return user
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -46,6 +46,21 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
         to_encode, settings.secret_key, algorithm=settings.aglorithm
     )
     return encoded_jwt
+
+
+def refresh_access_token(token: str) -> str:
+    invalid_token_exception = HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Invalid token",
+    )
+    try:
+        payload = jwt.decode(
+            token, settings.secret_key, algorithms=[settings.alogrithm]
+        )
+    except InvalidTokenError:
+        raise invalid_token_exception
+    new_token = create_access_token(payload)
+    return new_token
 
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):

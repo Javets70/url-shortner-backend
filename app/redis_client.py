@@ -3,7 +3,7 @@ from redis import Redis
 import json
 from typing import Optional, Any
 
-from app.settings import settings
+from app.config import settings
 
 redis_client: Redis = redis.from_url(settings.redis_url, decode_responses=True)
 

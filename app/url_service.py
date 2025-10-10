@@ -101,6 +101,7 @@ class URLService:
         user_agent: str = None,
         referer: str = None,
     ) -> ShortURL:
+        """Increment visit count and publish redis events for expiry and visit threshold"""
         url.visit_count += 1
         url.last_visited = datetime.now(timezone.utc)
         session.add(url)
