@@ -10,10 +10,10 @@ from app.auth import (
     refresh_access_token,
 )
 
-router = APIRouter(prefix="/auth", tags=["authentication"])
+auth_router = APIRouter(prefix="/auth", tags=["authentication"])
 
 
-@router.post("/register/", response_model=UserResponse)
+@auth_router.post("/register/", response_model=UserResponse)
 async def register(user_data: UserCreate, session: Session = Depends(get_session)):
     statement = select(User).where(User.username == user_data.username)
     user = session.exec(statement).first()
@@ -51,7 +51,7 @@ async def register(user_data: UserCreate, session: Session = Depends(get_session
     )
 
 
-@router.post("/login/", response_model=Token)
+@auth_router.post("/login/", response_model=Token)
 async def login(user_credentials: UserLogin, session: Session = Depends(get_session)):
     user = authenticate_user(
         session, user_credentials.username, user_credentials.password
@@ -72,7 +72,7 @@ async def login(user_credentials: UserLogin, session: Session = Depends(get_sess
     return Token(access_token=access_token, token_type="bearer")
 
 
-@router.post("/refresh-token/", response_model=Token)
+@auth_router.post("/refresh-token/", response_model=Token)
 async def refresh_token(old_token: str):
     token = Token(access_token=refresh_access_token(old_token), token_type="bearer")
     return token

@@ -1,14 +1,28 @@
 from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
 from app.config import settings
+from app.database import create_db_and_tables
 from app.utils import get_rate_limit_key
 from app.redis_client import redis_service
 
 
-app = FastAPI(title="URL Shrotner App", debug=True)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
+
+app = FastAPI(title="URL Shrotner App", debug=True, lifespan=lifespan)
 
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True)
+
+
+# @app.on_event("startup")
+# def startup_event():
+#     create_db_and_tables()
+#
 
 
 @app.get("/")
@@ -33,3 +47,10 @@ async def rate_limiter_middleware(request: Request, call_next):
 
     response = await call_next(request)
     return response
+
+
+from app.routers.auth import auth_router
+from app.routers.urls import urls_router
+
+app.include_router(auth_router)
+app.include_router(urls_router)

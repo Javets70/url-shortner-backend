@@ -1,5 +1,7 @@
 from sqlmodel import SQLModel, Session, create_engine
+
 from app.config import settings
+from app.models import User
 
 engine = create_engine(settings.database_url, echo=True)
 

@@ -140,5 +140,22 @@ class URLService:
 
         return url
 
+    def deactivate_url(self, session: Session, url_id: int, user_id: int) -> bool:
+        statement = select(ShortURL).where(
+            ShortURL.id == url_id, ShortURL.owner_id == user_id
+        )
+        url = session.exec(statement).first()
+
+        if url:
+            url.is_active = False
+            session.add(url)
+            session.commit()
+
+            cache_key = get_url_cache_key(url.short_code)
+            redis_service.delete_cache(cache_key)
+
+            return True
+        return False
+
 
 url_service = URLService()

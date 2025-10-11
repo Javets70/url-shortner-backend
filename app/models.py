@@ -17,7 +17,7 @@ class User(SQLModel, table=True):
     hashed_password: str
     role: UserRole = Field(default=UserRole.USER)
     is_active: bool = Field(default=True)
-    created_at: datetime = Field(default_factory=datetime.now(datetime.timezone.utc))
+    created_at: datetime = Field(default_factory=datetime.now(timezone.utc))
 
     # Relationships
     urls: List["ShortURL"] = Relationship(back_populates="owner")
@@ -33,7 +33,7 @@ class ShortURL(SQLModel, table=True):
     description: Optional[str] = None
 
     is_active: bool = Field(default=True)
-    created_at: datetime = Field(default_factory=datetime.now(datetime.timezone.utc))
+    created_at: datetime = Field(default_factory=datetime.now(timezone.utc))
     expires_at: Optional[datetime] = Field(default=None)
     visit_count: int = Field(default=0)
     last_visited: Optional[datetime] = Field(default=None)
